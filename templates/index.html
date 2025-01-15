@@ -27,13 +27,15 @@
             top: 0;
             width: 100%;
             z-index: 1000;
+            flex-wrap: wrap; /* لجعل الهيدر متجاوبًا */
         }
         header h1 {
             margin: 0;
             font-size: 24px;
         }
         nav {
-            position: relative;
+            display: flex;
+            align-items: center;
         }
         nav ul {
             list-style: none;
@@ -43,12 +45,12 @@
             flex-wrap: wrap; /* لجعل القائمة متجاوبة */
         }
         nav ul li {
-            margin-left: 20px;
+            margin-left: 15px;
         }
         nav ul li a {
             color: white;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 16px;
         }
         .dropdown-content {
             display: none;
@@ -95,7 +97,8 @@
         }
         .search-box input {
             padding: 10px;
-            width: 300px;
+            width: 100%;
+            max-width: 300px;
             border-radius: 5px;
             border: none;
         }
@@ -121,6 +124,48 @@
         }
         footer a:hover {
             text-decoration: underline;
+        }
+
+        /* تحسينات للأجهزة الصغيرة */
+        @media (max-width: 768px) {
+            header {
+                padding: 10px;
+            }
+            header h1 {
+                font-size: 20px;
+            }
+            nav ul li {
+                margin-left: 10px;
+            }
+            nav ul li a {
+                font-size: 14px;
+            }
+            .container {
+                margin-top: 60px;
+            }
+            .channel-list {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            nav {
+                margin-top: 10px;
+            }
+            nav ul {
+                flex-direction: column;
+            }
+            nav ul li {
+                margin-left: 0;
+                margin-bottom: 5px;
+            }
+            .container {
+                margin-top: 100px;
+            }
         }
     </style>
 </head>
@@ -199,7 +244,7 @@
         }
     </script>
     <footer>
-        <p>© 2025 TopLive. جميع الحقوق محفوظة.</p>
+        <p>© 2023 TopLive. جميع الحقوق محفوظة.</p>
         <a href="/privacy">سياسة الخصوصية</a> | <a href="/terms">شروط الاستخدام</a>
     </footer>
 </body>
