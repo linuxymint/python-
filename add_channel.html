@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إضافة قناة جديدة - TopLive</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            padding: 20px;
+            max-width: 600px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            text-align: center;
+        }
+        .container h2 {
+            margin-bottom: 20px;
+        }
+        .container input {
+            padding: 10px;
+            width: 80%;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+        .container button {
+            padding: 10px 20px;
+            background: #1e3c72;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .container button:hover {
+            background: #2a5298;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>إضافة قناة جديدة</h2>
+        <form method="POST">
+            <input type="text" name="name" placeholder="اسم القناة" required>
+            <input type="text" name="url" placeholder="رابط القناة (m3u8)" required>
+            <button type="submit">إضافة</button>
+        </form>
+    </div>
+</body>
+</html>
