@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TopLive - قنوات العراق</title>
+    <!-- إضافة خطوط جوجل -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
     <!-- إضافة مكتبة Plyr CSS -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    <!-- إضافة أنماط من uiverse.io -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* تطبيق خطوط جوجل */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Cairo', sans-serif;
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: white;
             margin: 0;
@@ -39,6 +40,7 @@
             margin: 0;
             padding: 0;
             display: flex;
+            flex-wrap: wrap; /* لجعل القائمة متجاوبة */
         }
         nav ul li {
             margin-left: 20px;
@@ -82,6 +84,7 @@
             padding: 15px;
             border-radius: 10px;
             text-align: center;
+            cursor: pointer;
         }
         .channel-card h3 {
             margin: 0 0 10px;
@@ -96,16 +99,14 @@
             border-radius: 5px;
             border: none;
         }
-        .theme-toggle {
+        .video-player {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #1e3c72;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
+            top: 80px;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            z-index: 999;
         }
         footer {
             background: rgba(0, 0, 0, 0.7);
@@ -120,95 +121,6 @@
         }
         footer a:hover {
             text-decoration: underline;
-        }
-        /* أزرار من uiverse.io */
-        .uiverse-button {
-            position: relative;
-            background: #444;
-            color: #fff;
-            text-decoration: none;
-            text-transform: uppercase;
-            border: none;
-            letter-spacing: 0.1rem;
-            font-size: 1rem;
-            padding: 1rem 3rem;
-            transition: 0.2s;
-        }
-        .uiverse-button:hover {
-            letter-spacing: 0.2rem;
-            padding: 1.1rem 3.1rem;
-            background: var(--clr);
-            color: var(--clr);
-            animation: box 3s infinite;
-        }
-        .uiverse-button::before {
-            content: "";
-            position: absolute;
-            inset: 2px;
-            background: #272822;
-        }
-        .uiverse-button span {
-            position: relative;
-            z-index: 1;
-        }
-        .uiverse-button i {
-            position: absolute;
-            inset: 0;
-            display: block;
-        }
-        .uiverse-button i::before {
-            content: "";
-            position: absolute;
-            width: 10px;
-            height: 2px;
-            left: 80%;
-            top: -2px;
-            border: 2px solid var(--clr);
-            background: #272822;
-            transition: 0.2s;
-        }
-        .uiverse-button:hover i::before {
-            width: 15px;
-            left: 20%;
-            animation: move 3s infinite;
-        }
-        .uiverse-button i::after {
-            content: "";
-            position: absolute;
-            width: 10px;
-            height: 2px;
-            left: 20%;
-            bottom: -2px;
-            border: 2px solid var(--clr);
-            background: #272822;
-            transition: 0.2s;
-        }
-        .uiverse-button:hover i::after {
-            width: 15px;
-            left: 80%;
-            animation: move 3s infinite;
-        }
-        @keyframes move {
-            0% {
-                transform: translateX(0);
-            }
-            50% {
-                transform: translateX(5px);
-            }
-            100% {
-                transform: translateX(0);
-            }
-        }
-        @keyframes box {
-            0% {
-                box-shadow: #27272c;
-            }
-            50% {
-                box-shadow: 0 0 25px var(--clr);
-            }
-            100% {
-                box-shadow: #27272c;
-            }
         }
     </style>
 </head>
@@ -226,6 +138,8 @@
                     </div>
                 </li>
                 <li><a href="/add_channel">إضافة قناة</a></li>
+                <li><a href="/privacy">سياسة الخصوصية</a></li>
+                <li><a href="/terms">شروط الاستخدام</a></li>
             </ul>
         </nav>
     </header>
@@ -235,30 +149,40 @@
         </div>
         <div class="channel-list" id="channelList">
             {% for channel in channels %}
-                <div class="channel-card">
+                <div class="channel-card" onclick="openVideo('{{ channel.url }}')">
                     <h3>{{ channel.name }}</h3>
-                    <!-- استخدام Plyr كمشغل فيديو -->
-                    <video controls playsinline autoplay loop data-plyr-config='{"controls": ["play", "progress", "current-time", "mute", "volume", "settings", "fullscreen"]}'>
-                        <source src="{{ channel.url }}" type="application/x-mpegURL">
-                        <track kind="subtitles" src="path/to/subtitles.vtt" srclang="ar" label="العربية">
-                        متصفحك لا يدعم تشغيل الفيديو.
-                    </video>
-                    <!-- زر من uiverse.io -->
-                    <button class="uiverse-button" style="--clr: #1e3c72">
-                        <span>مشاهدة</span>
-                        <i></i>
-                    </button>
                 </div>
             {% endfor %}
         </div>
     </div>
-    <!-- زر تغيير السمة -->
-    <button class="theme-toggle" onclick="toggleTheme()">تغيير السمة</button>
+    <!-- مشغل الفيديو -->
+    <div class="video-player" id="videoPlayer" style="display: none;">
+        <video id="video" controls playsinline data-plyr-config='{"controls": ["play", "progress", "current-time", "mute", "volume", "settings", "fullscreen"]}'>
+            <source id="videoSource" src="" type="application/x-mpegURL">
+            متصفحك لا يدعم تشغيل الفيديو.
+        </video>
+    </div>
     <!-- إضافة مكتبة Plyr JS -->
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
-        // تهيئة Plyr لكل مشغل فيديو
-        document.querySelectorAll('video').forEach(player => new Plyr(player));
+        // تهيئة Plyr
+        const player = new Plyr('#video');
+
+        // وظيفة فتح الفيديو
+        function openVideo(url) {
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoSource = document.getElementById('videoSource');
+            videoSource.src = url;
+            videoPlayer.style.display = 'block';
+            player.source = {
+                type: 'video',
+                sources: [{
+                    src: url,
+                    type: 'application/x-mpegURL'
+                }]
+            };
+            player.play();
+        }
 
         // وظيفة البحث عن القنوات
         function filterChannels() {
@@ -273,24 +197,10 @@
                 }
             });
         }
-
-        // وظيفة تغيير السمة
-        function toggleTheme() {
-            const body = document.body;
-            body.classList.toggle('light-theme');
-            const theme = body.classList.contains('light-theme') ? 'light' : 'dark';
-            localStorage.setItem('theme', theme);
-        }
-
-        // تحميل السمة المحفوظة
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'light') {
-            document.body.classList.add('light-theme');
-        }
     </script>
     <footer>
         <p>© 2025 TopLive. جميع الحقوق محفوظة.</p>
-        <a href="#">سياسة الخصوصية</a> | <a href="#">شروط الاستخدام</a>
+        <a href="/privacy">سياسة الخصوصية</a> | <a href="/terms">شروط الاستخدام</a>
     </footer>
 </body>
 </html>
