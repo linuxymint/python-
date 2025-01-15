@@ -23,7 +23,7 @@
         .container h2 {
             margin-bottom: 20px;
         }
-        .container input {
+        .container input, .container select {
             padding: 10px;
             width: 80%;
             margin-bottom: 10px;
@@ -49,6 +49,10 @@
         <form method="POST">
             <input type="text" name="name" placeholder="اسم القناة" required>
             <input type="text" name="url" placeholder="رابط القناة (m3u8)" required>
+            <select name="category" required>
+                <option value="أخبار">أخبار</option>
+                <option value="ترفيه">ترفيه</option>
+            </select>
             <button type="submit">إضافة</button>
         </form>
     </div>
