@@ -3,28 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>قنوات العراق</title>
+    <title>TopLive - قنوات العراق</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        nav {
+            position: relative;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        nav ul li {
+            margin-left: 20px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .container {
+            padding: 20px;
+        }
+        .channel-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        .channel-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .channel-card h3 {
+            margin: 0 0 10px;
+        }
+        .channel-card video {
+            width: 100%;
+            border-radius: 5px;
+        }
+        .search-box {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .search-box input {
+            padding: 10px;
+            width: 300px;
+            border-radius: 5px;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>قنوات العراق</h1>
-    <form onsubmit="playChannel(event)">
-        <select id="channel">
+    <header>
+        <h1>TopLive</h1>
+        <nav>
+            <ul>
+                <li><a href="/">الرئيسية</a></li>
+                <li class="dropdown">
+                    <a href="#">الإعدادات</a>
+                    <div class="dropdown-content">
+                        <a href="/add_channel">إضافة قناة</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <div class="container">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="ابحث عن قناة..." oninput="filterChannels()">
+        </div>
+        <div class="channel-list" id="channelList">
             {% for channel in channels %}
-                <option value="{{ channel.url }}">{{ channel.name }}</option>
+                <div class="channel-card">
+                    <h3>{{ channel.name }}</h3>
+                    <video controls>
+                        <source src="{{ channel.url }}" type="application/x-mpegURL">
+                        متصفحك لا يدعم تشغيل الفيديو.
+                    </video>
+                </div>
             {% endfor %}
-        </select>
-        <button type="submit">تشغيل</button>
-    </form>
-
-    <video id="videoPlayer" controls width="640" height="360"></video>
-
+        </div>
+    </div>
     <script>
-        function playChannel(event) {
-            event.preventDefault();
-            const url = document.getElementById('channel').value;
-            const videoPlayer = document.getElementById('videoPlayer');
-            videoPlayer.src = url;
-            videoPlayer.play();
+        function filterChannels() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const channels = document.querySelectorAll('.channel-card');
+            channels.forEach(channel => {
+                const name = channel.querySelector('h3').textContent.toLowerCase();
+                if (name.includes(input)) {
+                    channel.style.display = 'block';
+                } else {
+                    channel.style.display = 'none';
+                }
+            });
         }
     </script>
 </body>
