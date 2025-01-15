@@ -115,8 +115,9 @@
                 <div class="channel-card">
                     <h3>{{ channel.name }}</h3>
                     <!-- استخدام Plyr كمشغل فيديو -->
-                    <video controls playsinline data-plyr-config='{"controls": ["play", "progress", "current-time", "mute", "volume", "fullscreen"]}'>
+                    <video controls playsinline autoplay loop data-plyr-config='{"controls": ["play", "progress", "current-time", "mute", "volume", "settings", "fullscreen"]}'>
                         <source src="{{ channel.url }}" type="application/x-mpegURL">
+                        <track kind="subtitles" src="path/to/subtitles.vtt" srclang="ar" label="العربية">
                         متصفحك لا يدعم تشغيل الفيديو.
                     </video>
                 </div>
@@ -127,7 +128,26 @@
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
         // تهيئة Plyr لكل مشغل فيديو
-        document.querySelectorAll('video').forEach(player => new Plyr(player));
+        document.querySelectorAll('video').forEach(player => {
+            const plyr = new Plyr(player, {
+                speed: { selected: 1, options: [0.5, 1, 1.5, 2] }, // إضافة خيارات السرعة
+                quality: { default: 720, options: [4320, 2880, 2160, 1440, 1080, 720, 480, 360, 240] }, // إضافة خيارات الجودة
+                settings: ['quality', 'speed'], // إضافة إعدادات الجودة والسرعة
+            });
+
+            // إضافة إشعارات عند انتهاء الفيديو
+            player.addEventListener('ended', () => {
+                alert('انتهى الفيديو!');
+            });
+
+            // إضافة إشارات مرجعية (Bookmarks)
+            player.addEventListener('timeupdate', () => {
+                const currentTime = player.currentTime;
+                if (currentTime > 0 && currentTime % 60 === 0) {
+                    console.log(`تم وضع إشارة مرجعية عند: ${currentTime} ثانية`);
+                }
+            });
+        });
 
         // وظيفة البحث عن القنوات
         function filterChannels() {
