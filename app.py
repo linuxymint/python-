@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
@@ -23,6 +23,16 @@ channels = [
 @app.route('/')
 def index():
     return render_template('index.html', channels=channels)
+
+# صفحة إضافة قناة جديدة
+@app.route('/add_channel', methods=['GET', 'POST'])
+def add_channel():
+    if request.method == 'POST':
+        name = request.form['name']
+        url = request.form['url']
+        channels.append({"name": name, "url": url})
+        return redirect(url_for('index'))
+    return render_template('add_channel.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
