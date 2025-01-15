@@ -89,6 +89,17 @@
             border-radius: 5px;
             border: none;
         }
+        .theme-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #1e3c72;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -98,11 +109,13 @@
             <ul>
                 <li><a href="/">الرئيسية</a></li>
                 <li class="dropdown">
-                    <a href="#">الإعدادات</a>
+                    <a href="#">الفئات</a>
                     <div class="dropdown-content">
-                        <a href="/add_channel">إضافة قناة</a>
+                        <a href="/category/أخبار">أخبار</a>
+                        <a href="/category/ترفيه">ترفيه</a>
                     </div>
                 </li>
+                <li><a href="/add_channel">إضافة قناة</a></li>
             </ul>
         </nav>
     </header>
@@ -120,34 +133,23 @@
                         <track kind="subtitles" src="path/to/subtitles.vtt" srclang="ar" label="العربية">
                         متصفحك لا يدعم تشغيل الفيديو.
                     </video>
+                    <!-- تقييم القناة -->
+                    <form method="POST" action="/rate/{{ loop.index0 }}">
+                        <input type="number" name="rating" min="1" max="5" placeholder="التقييم (1-5)" required>
+                        <textarea name="comment" placeholder="تعليقك"></textarea>
+                        <button type="submit">تقييم</button>
+                    </form>
                 </div>
             {% endfor %}
         </div>
     </div>
+    <!-- زر تغيير السمة -->
+    <button class="theme-toggle" onclick="toggleTheme()">تغيير السمة</button>
     <!-- إضافة مكتبة Plyr JS -->
     <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
         // تهيئة Plyr لكل مشغل فيديو
-        document.querySelectorAll('video').forEach(player => {
-            const plyr = new Plyr(player, {
-                speed: { selected: 1, options: [0.5, 1, 1.5, 2] }, // إضافة خيارات السرعة
-                quality: { default: 720, options: [4320, 2880, 2160, 1440, 1080, 720, 480, 360, 240] }, // إضافة خيارات الجودة
-                settings: ['quality', 'speed'], // إضافة إعدادات الجودة والسرعة
-            });
-
-            // إضافة إشعارات عند انتهاء الفيديو
-            player.addEventListener('ended', () => {
-                alert('انتهى الفيديو!');
-            });
-
-            // إضافة إشارات مرجعية (Bookmarks)
-            player.addEventListener('timeupdate', () => {
-                const currentTime = player.currentTime;
-                if (currentTime > 0 && currentTime % 60 === 0) {
-                    console.log(`تم وضع إشارة مرجعية عند: ${currentTime} ثانية`);
-                }
-            });
-        });
+        document.querySelectorAll('video').forEach(player => new Plyr(player));
 
         // وظيفة البحث عن القنوات
         function filterChannels() {
@@ -161,6 +163,20 @@
                     channel.style.display = 'none';
                 }
             });
+        }
+
+        // وظيفة تغيير السمة
+        function toggleTheme() {
+            const body = document.body;
+            body.classList.toggle('light-theme');
+            const theme = body.classList.contains('light-theme') ? 'light' : 'dark';
+            localStorage.setItem('theme', theme);
+        }
+
+        // تحميل السمة المحفوظة
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
         }
     </script>
 </body>
