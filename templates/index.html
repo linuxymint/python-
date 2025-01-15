@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TopLive - قنوات العراق</title>
+    <!-- إضافة مكتبة Plyr CSS -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -77,10 +79,6 @@
         .channel-card h3 {
             margin: 0 0 10px;
         }
-        .channel-card video {
-            width: 100%;
-            border-radius: 5px;
-        }
         .search-box {
             margin-bottom: 20px;
             text-align: center;
@@ -116,7 +114,8 @@
             {% for channel in channels %}
                 <div class="channel-card">
                     <h3>{{ channel.name }}</h3>
-                    <video controls>
+                    <!-- استخدام Plyr كمشغل فيديو -->
+                    <video controls playsinline data-plyr-config='{"controls": ["play", "progress", "current-time", "mute", "volume", "fullscreen"]}'>
                         <source src="{{ channel.url }}" type="application/x-mpegURL">
                         متصفحك لا يدعم تشغيل الفيديو.
                     </video>
@@ -124,7 +123,13 @@
             {% endfor %}
         </div>
     </div>
+    <!-- إضافة مكتبة Plyr JS -->
+    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <script>
+        // تهيئة Plyr لكل مشغل فيديو
+        document.querySelectorAll('video').forEach(player => new Plyr(player));
+
+        // وظيفة البحث عن القنوات
         function filterChannels() {
             const input = document.getElementById('searchInput').value.toLowerCase();
             const channels = document.querySelectorAll('.channel-card');
